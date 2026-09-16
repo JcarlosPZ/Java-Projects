@@ -1,10 +1,12 @@
+package cev.bancodocarlos;
+
+
+import java.util.Scanner;
+
 public class SistemaBanco {
 
 	private Scanner teclado;
-
 	private ContaBanco conta;
-
-	private ContaBanco contaBanco;
 
 	/**
 	 * construtor:
@@ -12,8 +14,8 @@ public class SistemaBanco {
 	 * instancia nova contaBanco
 	 */
 	public SistemaBanco() {
-
-	}
+            
+        }
 
 	/**
 	 * 1 - Criar nova conta
@@ -75,6 +77,11 @@ public class SistemaBanco {
 	/**
 	 * 1- confirma
 	 * 2- cancela
+         * /////////// recebe um verificador da função fecharConta()
+         * se 1 - conta excluida
+         * se 2 - inexistente
+         * se 3 - saldo em conta
+         * se 4 - saldo negativo
 	 */
 	public void solicitarFechamentoDeConta() {
 
@@ -83,6 +90,10 @@ public class SistemaBanco {
 	/**
 	 * 1-valor
 	 * 2-cancela
+         * 
+         * 
+         * recebe 0 do deposito() se não tiver conta existente
+         * e 1 se for um sucesso
 	 */
 	public void solicitarDeposito() {
 
@@ -92,8 +103,12 @@ public class SistemaBanco {
 	 * mostra valor disponível
 	 * se >0
 	 * pede o valor que deseja sacar
-	 * se <=0
+	 * se retorno == 0
 	 * mostra erro
+         * se retorno ==  1
+         * sucesso
+         * se retorno == 2
+         * saldo insuficiente
 	 */
 	public void solicitarSaque() {
 
@@ -105,8 +120,12 @@ public class SistemaBanco {
 	 * se >0
 	 * pede o valor que deseja sacar
 	 * se <=0
-	 * +1 mes devendo
+	 * +1 atraso
 	 * 
+         * recebe 0 se n tem conta
+         * recebe 1 se sucesso
+         * recebe 2 se não tem saldo
+         * 
 	 * 1-pagar
 	 * 2-dever esse mÊs
 	 * 3-voltar

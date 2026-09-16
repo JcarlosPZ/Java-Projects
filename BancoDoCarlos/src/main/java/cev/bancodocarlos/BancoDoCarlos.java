@@ -11,6 +11,6 @@ package cev.bancodocarlos;
 public class BancoDoCarlos {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        
     }
 }

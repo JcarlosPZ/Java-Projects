@@ -1,125 +1,191 @@
+package cev.bancodocarlos;
+
 public class ContaBanco {
+    
+    public String numConta;
 
-	public String numConta;
+    /**
+     * 1- cc-Conta corrente
+     * 2- cp-conta polpança
+     */
+    protected int tipo;
+    private String dono;
+    private double saldo;
+    private boolean status;
+    private int mensalidade;
 
-	/**
-	 * 1- cc-Conta corrente
-	 * 2- cp-conta polpança
-	 */
-	protected int tipo;
 
-	private String dono;
+    public ContaBanco() {
+        setStatus(false);
+        setSaldo(true,0);
+        setMensalidade(1);
+    }
 
-	private double saldo;
+    public void setNumConta(String numConta) {
+        this.numConta = numConta;
+    }
 
-	private boolean status;
+    public String getNumConta() {
+        return this.numConta;
+    }
 
-	private SistemaBanco sistemaBanco;
+    /**
 
-	/**
-	 *  
-	 */
-	public ContaBanco() {
+     */
+    public void setTipo(int tipo) {
+        this.tipo=tipo;
+    }
 
-	}
+    /**
+     * @return cc se 1 ou cp se 2
+     * se 1:
+     * 	cc
+     * se 2:
+     * 	cp
+     */
+    public int getTipo() {
+        return this.tipo;
+    }
 
-	public void setNumConta(String numConta) {
+    public void setDono(String dono) {
+        this.dono = dono;
 
-	}
+    }
 
-	public String getNumConta() {
-		return null;
-	}
+    public String getDono() {
+            return this.dono;
+    }
 
-	/**
-	 * se 1:
-	 * 	cc
-	 * se 2:
-	 * 	cp
-	 */
-	public void setTipo(int tipo) {
+    public void setSaldo(boolean operador, double saldo) {
+        if(operador){
+            this.saldo+=saldo;
+        }else{    
+            this.saldo-=saldo;
+        }
+    }
 
-	}
+    public double getSaldo() {
+        return this.saldo;
+    }
 
-	/**
-	 * retorna cc se 1 ou cp se 2
-	 */
-	public String getTipo() {
-		return null;
-	}
+    public void setStatus(boolean status) {
+        this.status=status;
+    }
 
-	public void setDono(String dono) {
+    public boolean getStatus() {
+        return status;
+    }
 
-	}
 
-	public String getDono() {
-		return null;
-	}
+    /**
+     * acumulo de atrasos na mensalidade
+     * default 1
+     */
+    private void setMensalidade(int mensalidade){
+        this.mensalidade = mensalidade;
+    }
 
-	public void setSaldo(double saldo) {
+    private int getMensalidade(){
+        return this.mensalidade;
+    }
 
-	}
+    /**
+     * 1- cc +=50 reais
+     * 2 - cp+=150
+     * 
+     * status = true
+     */
+    public void abrirConta(int tipo) {
+        if (tipo == 1 || tipo == 2) {
+            setStatus(true);
+            setTipo(tipo);
+            switch (tipo) {
+                case 1 -> setSaldo(true, 50);
+                case 2 -> setSaldo(true, 150);
+            }
+        } else {
+            System.out.println("OPÇÃO INVÁLIDA \n ERRO!!");
+        }
+    }
 
-	public double getSaldo() {
-		return 0;
-	}
+    /**
+     * só funciona se:
+     * saldo == 0
+     * status == true
+     */
+    public int fecharConta() {
+        if(!getStatus()){
+            return 2;
+        }
+        if(getSaldo()>0){
+            return 3;
+        }
+        if(getSaldo()<0){
+            return 4;
+        }
 
-	public void setStatus(boolean status) {
+        setStatus(false);
+        return 1;
+    }
 
-	}
 
-	public boolean getStatus() {
-		return false;
-	}
+    public int depositar(double valor) {
+        if(getStatus()==true){
+            setSaldo(true, valor);
+            return 1;
+        }else{
+            return 0;
+        }
+    }
 
-	/**
-	 * 1- cc +=50 reais
-	 * 2 - cp+=150
-	 * 
-	 * status = true
-	 */
-	public void abrirConta(int tipo) {
+    /**
+     * só funciona se:
+     * status == true 
+     * e
+     * saldo >0
+     * e
+     * saldo >= saque
+     * 
+     * 
+     * saldo-=valor
+     * se saldo <=0 erro
+     */
+    public int sacar(double valor) {
+        if(!getStatus()){
+            return 0;
+        }
+        if(getSaldo()>=valor){
+            setSaldo(false, valor);
+            return 1;
+        }
+        else{
+            return 2;
+        }
 
-	}
+    }
 
-	/**
-	 * só funciona se:
-	 * saldo == 0
-	 * status == true
-	 */
-	public void fecharConta() {
+    /**
+     * cc-=12
+     * cp-=20
+     * por mês
+     * só se:
+     * saldo>0
+     */
+    public int pagarMensalidade(int meses) {
+        if (!getStatus()) {
+            return 0; // Conta fechada
+        }
 
-	}
+        double valorBase = (getTipo() == 1) ? 12 : (getTipo() == 2) ? 20 : 0;
+        double totalCobrar = valorBase * getMensalidade() * meses;
 
-	/**
-	 * só funciona se:
-	 * status == true 
-	 * e
-	 * saldo >0
-	 * e
-	 * saldo >= saque
-	 */
-	public void depositar(double valor) {
-
-	}
-
-	/**
-	 * saldo-=valor
-	 * se saldo <=0 erro
-	 */
-	public void sacar(double valor) {
-
-	}
-
-	/**
-	 * cc-=12
-	 * cp-=20
-	 * por mês
-	 * só se:
-	 * saldo>0
-	 */
-	public void pagarMensalidade(int meses) {
-
-	}
+        if (getSaldo() >= totalCobrar) {
+            setSaldo(false, totalCobrar);
+            setMensalidade(1);
+            return 1; // Sucesso
+        } else {
+            return 2; // Saldo insuficiente
+        }
+    }
 
 }
