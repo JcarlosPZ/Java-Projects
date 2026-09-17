@@ -11,6 +11,8 @@ package cev.bancodocarlos;
 public class BancoDoCarlos {
 
     public static void main(String[] args) {
+        SistemaBanco sistema = new SistemaBanco();
+        sistema.exibirMenuPrincipal();
         
     }
 }

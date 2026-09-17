@@ -7,6 +7,7 @@ public class SistemaBanco {
 
 	private Scanner teclado;
 	private ContaBanco conta;
+        int option;
 
 	/**
 	 * construtor:
@@ -14,7 +15,8 @@ public class SistemaBanco {
 	 * instancia nova contaBanco
 	 */
 	public SistemaBanco() {
-            
+            this.teclado = new Scanner(System.in);
+            this.conta = new ContaBanco();
         }
 
 	/**
@@ -23,15 +25,54 @@ public class SistemaBanco {
 	 * 3- sair
 	 */
 	public void exibirMenuPrincipal() {
-
+            System.out.println("=====================");
+            System.out.println("BEM-VINDO AO BANCO!");
+            System.out.println("=====================\n \n");
+            System.out.println("Selecione uma opçao:\n");
+            do{
+                System.out.println("1- Criar nova conta");
+                System.out.println("2 - Acessar conta existente");
+                System.out.println("3 - Encerrar");
+                System.out.println("\n=====================");
+                System.out.println("[OPÇÃO]: ");
+                option = teclado.nextInt();
+                switch(option){
+                    case 1 -> solicitarCriarConta();
+                    case 2 -> solicitarLoggin();
+                    case 3 -> System.out.print("Obrigado\nVolte sempre!");
+                    default -> System.out.println("Erro\nEscolha uma opção válida");
+                }
+            }while (option !=1 && option !=2 && option !=3);
 	}
 
+        private void solicitarLoggin(){
+            System.out.println("=====================");
+            System.out.println("ACESSE SUA CONTA");
+            System.out.println("=====================\n \n");
+            
+            teclado.nextLine();
+            
+            String nome,numConta;
+            boolean autenticado = false;
+            do{
+                System.out.println("Nome:");
+                nome = teclado.nextLine();
+                System.out.println("Numero da conta:");
+                numConta = teclado.nextLine();
+                autenticado = autenticador(nome, numConta);
+                if(!autenticado){
+                    System.out.println("[ERRO] NOME ou NUMERO DA CONTA  incorretos!\nTente novamente");
+                }
+            } while(!autenticado);
+            System.out.println("[SUCESSO] Bem vindo " + nome.toUpperCase() + "!\n");
+            exibirMenuPrincipal();
+        }
 	/**
 	 * se tipo==1 digito 55
 	 * se tipo ==2 digito 67
 	 */
-	private boolean autenticador(String dono, String numConta) {
-		return false;
+	private boolean autenticador(String nome, String numConta) {
+            return nome.equalsIgnoreCase(this.conta.getDono()) && numConta.equals(this.conta.getNumConta());
 	}
 
 	/**
