@@ -1,5 +1,7 @@
 package cev.bancodocarlos;
 
+import java.security.SecureRandom;
+
 public class ContaBanco {
     
     public String numConta;
@@ -18,7 +20,7 @@ public class ContaBanco {
     public ContaBanco() {
         setStatus(false);
         setSaldo(true,0);
-        setMensalidade(1);
+        setMensalidade(true,1);
     }
 
     public void setNumConta(String numConta) {
@@ -81,11 +83,18 @@ public class ContaBanco {
      * acumulo de atrasos na mensalidade
      * default 1
      */
-    private void setMensalidade(int mensalidade){
-        this.mensalidade = mensalidade;
+    public void setMensalidade(boolean operador, int mensalidade){
+        if (operador){
+            this.mensalidade += mensalidade;
+        }
+        else{
+            this.mensalidade -= mensalidade;
+
+        }
+        
     }
 
-    private int getMensalidade(){
+    public int getMensalidade(){
         return this.mensalidade;
     }
 
@@ -96,6 +105,10 @@ public class ContaBanco {
      * status = true
      */
     public void abrirConta(int tipo) {
+        if(this.getStatus()==true){
+            System.out.println("OPÇÃO INVÁLIDA \n a conta já existe!!");
+            return;
+        }
         if (tipo == 1 || tipo == 2) {
             setStatus(true);
             setTipo(tipo);
@@ -122,6 +135,9 @@ public class ContaBanco {
         }
         if(getSaldo()<0){
             return 4;
+        }
+        if(this.getMensalidade()!=0){
+            return 5;
         }
 
         setStatus(false);
@@ -151,9 +167,6 @@ public class ContaBanco {
      * se saldo <=0 erro
      */
     public int sacar(double valor) {
-        if(!getStatus()){
-            return 0;
-        }
         if(getSaldo()>=valor){
             setSaldo(false, valor);
             return 1;
@@ -162,6 +175,17 @@ public class ContaBanco {
             return 2;
         }
 
+    }
+    
+    public double valorTotalMensalidade(int tipo, int quantidade){
+        double total;
+        switch (tipo){
+            case 1 -> total = 12*quantidade;
+            case 2 -> total = 20*quantidade;
+            default -> total = -20;
+        }
+        
+        return total;
     }
 
     /**
@@ -177,15 +201,44 @@ public class ContaBanco {
         }
 
         double valorBase = (getTipo() == 1) ? 12 : (getTipo() == 2) ? 20 : 0;
-        double totalCobrar = valorBase * getMensalidade() * meses;
+        double totalCobrar = valorBase * meses;
 
         if (getSaldo() >= totalCobrar) {
             setSaldo(false, totalCobrar);
-            setMensalidade(1);
+            setMensalidade(false, this.getMensalidade());
             return 1; // Sucesso
         } else {
             return 2; // Saldo insuficiente
         }
     }
+    
+    /**
+	 * se tipo==1 digito 55
+	 * se tipo ==2 digito 67
+	 */
+	public void gerarNumConta(int tipo) {
+            
+            SecureRandom secureRandom = new SecureRandom();
+            
+            int random = secureRandom.nextInt(100000);
+            
+            String num;
+            
+            switch(tipo){
+                case 1 -> num = Integer.toString(random) + " - 55";
+                
+                case 2 -> num = Integer.toString(random) + " - 67";
+                
+                default -> num = "erro";
+            }
+            
+            this.setNumConta(num);
+	}
+        
+        public String tipoString() {
+            int tipo = this.getTipo();
+            String resposta = (tipo == 1) ? "CC" : "CP"; 
+            return resposta;
+        }
 
 }
