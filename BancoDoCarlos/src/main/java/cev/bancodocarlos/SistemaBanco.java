@@ -25,18 +25,27 @@ public class SistemaBanco {
      * 3- sair
      */
     public void exibirMenuPrincipal() {
-        System.out.println("=====================");
-        System.out.println("BEM-VINDO AO BANCO!");
-        System.out.println("=====================\n \n");
-        System.out.println("Selecione uma opçao:\n");
+        String painel = """
+                        ===========================================
+                        ----------- Bem-Vindo ao Banco ------------
+                        ===========================================
+                        """;
+        System.out.println(painel);
         do{
-            System.out.println("[1] - Criar nova conta");
-            System.out.println("[2] - Acessar conta existente");
-            System.out.println("[3] - Encerrar");
-            System.out.println("\n=====================");
-            System.out.println("[OPÇÃO]: ");
+            String escolha = """
+                                  Selecione uma das opções abaixo
+
+                                  [1] -------- Criar uma nova conta
+                                  [2] ----- Acessar conta existente
+                                  [6] ---------------------Encerrar
+
+                            ===========================================  
+                             [OPÇÃO]:                                                      
+                              """;
+            System.out.print(escolha);
             option = teclado.nextInt();
             teclado.nextLine();
+            
             switch(option){
                 case 1 -> this.solicitarCriarConta();
                 case 2 -> this.solicitarLoggin();
@@ -47,11 +56,12 @@ public class SistemaBanco {
     }
 
     private void solicitarLoggin(){
-        System.out.println("=====================");
-        System.out.println("ACESSE SUA CONTA");
-        System.out.println("=====================\n \n");
-
-        teclado.nextLine();
+        String painel = """
+                        ===========================================
+                        ------------ Acesse sua conta -------------
+                        ===========================================
+                        """;
+        System.out.println(painel);
 
         String nome,numConta;
         boolean autenticado = false;
@@ -62,15 +72,24 @@ public class SistemaBanco {
             numConta = teclado.nextLine();
             autenticado = autenticador(nome, numConta);
             if(!autenticado){
-                System.out.println("[ERRO] NOME ou NUMERO DA CONTA  incorretos!\nTente novamente ou retorne ao menu principal");
-                System.out.println("==================================");
-                System.out.println("[1] --------------Tentar novamente");
-                System.out.println("[2] ------Voltar ao menu principal");
-                System.out.println("==================================");
+                String menu = """
+                              ===========================================
+                           ---[ERRO] NOME ou NUMERO DA CONTA  incorretos!---
+                              Tente novamente ou retorne ao menu principal
+                              -------------------------------------------
+                                    Selecione uma das opções abaixo
+
+                                    [1] -------------Tentar novamente
+                                    [2] ---Retornar ao menu principal 
+                              ===========================================                                                       
+                              """;
+            System.out.println(menu);
+                
                 int escolha = teclado.nextInt();
                 teclado.nextLine();
+                
                 switch (escolha){
-                    case 1 -> System.out.print("ATENÇÃO");
+                    case 1 -> System.out.println("ATENÇÃO");
                     
                     case 2 -> {
                         return;
@@ -103,7 +122,7 @@ public class SistemaBanco {
         do{
             String escolha = """
                               ===========================================
-                                         ---Olá, %s!---
+                                      ---Olá, %s!---
 
                                     Selecione uma das opções abaixo
 
@@ -149,43 +168,57 @@ public class SistemaBanco {
     public void solicitarCriarConta() {
 
         String nome;
-
-        System.out.println("=====================");
-        System.out.println("CRIE AQUI SUA CONTA");
-        System.out.println("=====================\n \n");
+        
+        String painel = """
+                        ===========================================
+                        ----------- CRIE AQUI SUA CONTA -----------
+                        ===========================================
+                        """;
+        System.out.println(painel);
 
         do{
-            System.out.println("Informe seu primeiro e último nome para cadastro\n ou digite [0] para cancelar:\n");
+            System.out.println("Informe seu primeiro e último nome, sem espaços extras, para cadastro\n ou digite [0] para cancelar:\n");
             nome = teclado.nextLine();
 
             if(nome.equals("0")){
-                System.out.println("======OPERAÇÃO CANCELADA======");
+                System.out.println("=========== OPERAÇÃO CANCELADA ============");
                 return;
             }
+            
+            String regexNome = "[A-Z][a-zA-Z][A-Z]?[a-z]*\\s[A-Z][a-zA-Z][A-Z]?[a-z]*";
 
-            if(nome.isEmpty()){
-                System.out.println("Nome Inválido, tente novamente");
-            }
-        }while(nome.isEmpty());
+                if (nome.matches(regexNome)) {
+                    System.out.println("Cadastro realizado com sucesso!");
+                    break; // Sai do do-while pois o nome é válido
+                } else {
+                    System.out.println("Nome Inválido, tente novamente\n");
+                }
+
+            } while (true);
 
         do{
-            System.out.println("Selecione o tipo de conta: ");
-            System.out.println("[1] - CC ( Conta Corrente)");
-            System.out.println("[2] - CP (Conta Polpança)");
-            System.out.println("[3] - CANCELA");
-            System.out.println("-------------------------");
+            String escolha = """
+                              ===========================================
+                                    Selecione uma das opções abaixo
+
+                                    [1] -------------- Conta Corrente
+                                    [2] -------------- Conta Polpança 
+                                    [3] -------------------- CANCELAR
+                              ===========================================
+                              """;
+            System.out.println(escolha);
 
             option = teclado.nextInt();
             teclado.nextLine();
             
             
             if(option == 3){
-                System.out.println("======OPERAÇÃO CANCELADA======");
+                System.out.println("============ OPERAÇÃO CANCELADA ===========");
                 return;
                 
             }
             if(option<1 || option > 3){
-                System.out.println("[ERRO] Escolha uma opção válida");
+                System.out.println("===== [ERRO] Escolha uma opção válida =====");
             }
         }while(option<1 || option>3);
         this.conta.setDono(nome);
@@ -203,11 +236,11 @@ public class SistemaBanco {
 
                                  Numero da Conta -------------%s
 
-                                 valor das mensalidades ------%f
+                                 valor das mensalidades ----R$%.2f
 
 
                              +++++++++++++++++++++++++++++++++++++++
-                                 Saldo -----------------------%f
+                                 Saldo -------------------R$%.2f
                              +++++++++++++++++++++++++++++++++++++++
                            """.formatted(this.conta.getDono(), 
                                    this.conta.tipoString(),
@@ -240,11 +273,11 @@ public class SistemaBanco {
 
                                  Numero da Conta -------------%s
 
-                                 valor das mensalidades ------%f
+                                 valor das mensalidades ---R$%.2f
 
 
                              +++++++++++++++++++++++++++++++++++++++
-                                 Saldo -----------------------%f
+                                 Saldo -------------------R$%.2f
                              +++++++++++++++++++++++++++++++++++++++
                            """.formatted(this.conta.getDono(), 
                                    this.conta.tipoString(),
@@ -315,7 +348,7 @@ public class SistemaBanco {
 
 
                                 +++++++++++++++++++++++++++++++++++++++
-                                    Saldo -----------------------%f
+                                    Saldo ------------------R$%.2f
                                 +++++++++++++++++++++++++++++++++++++++
                             """.formatted(conta.getDono(), 
                                     this.conta.tipoString(), 
@@ -348,6 +381,29 @@ public class SistemaBanco {
                 System.out.println("ERRO saldo insuficiente");
                 System.out.println("Tente novamente");
             }
+            else if (result == 1){
+                String sucesso = """
+                              ===========================================
+                              ------------ Deposito realizado -----------
+                              ===========================================
+                                                ---%s----
+
+
+                                    Saldo anterior -------------%.2f
+
+                                    Valor depositado ----------+%.2f
+
+
+                                +++++++++++++++++++++++++++++++++++++++
+                                    Saldo ------------------R$%.2f
+                                +++++++++++++++++++++++++++++++++++++++
+                            """.formatted(this.conta.getDono(), 
+                                    (this.conta.getSaldo()-valor), 
+                                    valor, 
+                                    conta.getSaldo());
+                System.out.println(sucesso);
+            }
+            
         }while(result!=0);   
     }
 
@@ -377,7 +433,7 @@ public class SistemaBanco {
 
 
                                 +++++++++++++++++++++++++++++++++++++++
-                                    Saldo -----------------------%f
+                                    Saldo -------------------R$%.2f
                                 +++++++++++++++++++++++++++++++++++++++
                             """.formatted(conta.getDono(), this.conta.tipoString(), conta.getNumConta(), conta.getSaldo());
         System.out.println(saldoEmConta);
@@ -402,6 +458,27 @@ public class SistemaBanco {
             
             if (result == 2){
                 System.out.println("SALDO INSUFICIENTE");
+            }else if (result == 1){
+                String sucesso = """
+                              ===========================================
+                              -------------- Saque realizado ------------
+                              ===========================================
+                                                ---%s----
+
+
+                                    Saldo anterior -------------%.2f
+
+                                    Valor de saque ----------- -%.2f
+
+
+                                +++++++++++++++++++++++++++++++++++++++
+                                    Saldo ------------------R$%.2f
+                                +++++++++++++++++++++++++++++++++++++++
+                            """.formatted(this.conta.getDono(), 
+                                    (this.conta.getSaldo()+valor), 
+                                    valor, 
+                                    conta.getSaldo());
+                System.out.println(sucesso);
             }
             
         }while(result!=2);   
@@ -435,7 +512,7 @@ public class SistemaBanco {
                                     Mensalidades a pagar----------%d
 
                                     Valor da mensalidade
-                                    para %s ----------------------%f
+                                    para %s ------------------R$%.2f
 
                               """.formatted(this.conta.getDono(),this.conta.getSaldo(),
                                       this.conta.getMensalidade(),this.conta.tipoString(),
@@ -508,7 +585,7 @@ public class SistemaBanco {
 
 
                                 +++++++++++++++++++++++++++++++++++++++
-                                    Saldo -----------------------%f
+                                    Saldo -------------------R$%.2f
                                 +++++++++++++++++++++++++++++++++++++++
                             """.formatted(this.conta.getDono(), 
                                     this.conta.tipoString(), 
