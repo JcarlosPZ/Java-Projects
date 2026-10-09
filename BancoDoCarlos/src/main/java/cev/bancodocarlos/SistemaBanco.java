@@ -37,7 +37,7 @@ public class SistemaBanco {
 
                                   [1] -------- Criar uma nova conta
                                   [2] ----- Acessar conta existente
-                                  [6] ---------------------Encerrar
+                                  [3] ---------------------Encerrar
 
                             ===========================================  
                              [OPÇÃO]:                                                      
